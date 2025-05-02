@@ -3,9 +3,9 @@ import React, { useContext, useEffect, useState } from "react";
 import MovieCard from "../components/MovieCard";
 import { AuthContext } from "../context/AuthContext";
 
-// const API_KEY = "d6278b3dc3e6f8f8376a89851c3f8c8f";
+
 const API_KEY = process.env.REACT_APP_TMDB_KEY;
-const FEATURED_API = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}`;
+const FEATURED_API = `https://api.themoviedb.org/3/discover/movie`;
 const SEARCH_API = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=`;
 
 const Main = () => {
@@ -14,12 +14,14 @@ const Main = () => {
   const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
-    getMovies(FEATURED_API);
+    getMovies(FEATURED_API,API_KEY);
   }, []);
 
-  const getMovies = (API) => {
+  const getMovies = (API, apiKey) => {
     axios
-      .get(API)
+      .get(API,{headers:{
+        Authorization:"Bearer" + " " + apiKey
+      }})
       .then((res) => setMovies(res.data.results))
       .catch((err) => console.log(err));
   };
